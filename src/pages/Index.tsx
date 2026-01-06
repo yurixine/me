@@ -2,6 +2,7 @@ import Background from "@/components/Background";
 import SocialIcons from "@/components/SocialIcons";
 import ViewCounter from "@/components/ViewCounter";
 import DiscordActivity from "@/components/DiscordActivity";
+import MusicPlayer from "@/components/MusicPlayer";
 import { cn } from "@/lib/utils";
 import { useDiscordPresence } from "@/hooks/useDiscordPresence";
 
@@ -35,6 +36,7 @@ const Index = () => {
     <div className="relative min-h-screen flex flex-col items-center justify-center">
       <Background url={BACKGROUND_CONFIG.url || null} type={BACKGROUND_CONFIG.url ? BACKGROUND_CONFIG.type : null} />
       <ViewCounter />
+      <MusicPlayer />
 
       <main className="flex flex-col items-center justify-center gap-12 px-6 text-center">
         <div className="animate-fade-in-up flex flex-col items-center gap-4" style={{ animationDelay: "0.1s" }}>
