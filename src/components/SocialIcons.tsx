@@ -1,5 +1,6 @@
-import { Check } from "lucide-react";
+import { Check, MessageSquare } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const DiscordIcon = () => (
   <svg
@@ -21,16 +22,40 @@ const SpotifyIcon = () => (
   </svg>
 );
 
+const RiotIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className="w-6 h-6"
+  >
+    <path d="M12.534 21.77l-1.09-2.81 10.52.54-.451 4.5zM15.06 0L.307 6.969 2.59 17.471H5.6l-.52-7.512.461-.144 1.81 7.656h3.126l-.116-9.15.462-.144 1.582 9.294h3.31l.78-11.053.463-.144.497 11.197h3.832l.871-14.388z" />
+  </svg>
+);
+
 const DISCORD_USERNAME = "yooriyuri";
+const RIOT_USERNAME = "yuri#yoori";
 
 const SocialIcons = () => {
-  const [copied, setCopied] = useState(false);
+  const [copiedDiscord, setCopiedDiscord] = useState(false);
+  const [copiedRiot, setCopiedRiot] = useState(false);
+  const [showDiscordTooltip, setShowDiscordTooltip] = useState(false);
+  const [showRiotTooltip, setShowRiotTooltip] = useState(false);
 
   const handleDiscordClick = async () => {
     try {
       await navigator.clipboard.writeText(DISCORD_USERNAME);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedDiscord(true);
+      setTimeout(() => setCopiedDiscord(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  const handleRiotClick = async () => {
+    try {
+      await navigator.clipboard.writeText(RIOT_USERNAME);
+      setCopiedRiot(true);
+      setTimeout(() => setCopiedRiot(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
     }
@@ -44,17 +69,19 @@ const SocialIcons = () => {
     <div className="flex items-center gap-8">
       <button
         onClick={handleDiscordClick}
+        onMouseEnter={() => setShowDiscordTooltip(true)}
+        onMouseLeave={() => setShowDiscordTooltip(false)}
         aria-label="Copy Discord username"
         className="social-icon relative"
       >
-        {copied ? (
+        {copiedDiscord ? (
           <Check className="w-6 h-6" />
         ) : (
           <DiscordIcon />
         )}
-        {copied && (
+        {(showDiscordTooltip || copiedDiscord) && (
           <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap">
-            Copied!
+            {copiedDiscord ? "Copied!" : DISCORD_USERNAME}
           </span>
         )}
       </button>
@@ -71,6 +98,33 @@ const SocialIcons = () => {
           {social.icon}
         </a>
       ))}
+
+      <button
+        onClick={handleRiotClick}
+        onMouseEnter={() => setShowRiotTooltip(true)}
+        onMouseLeave={() => setShowRiotTooltip(false)}
+        aria-label="Copy Riot ID"
+        className="social-icon relative"
+      >
+        {copiedRiot ? (
+          <Check className="w-6 h-6" />
+        ) : (
+          <RiotIcon />
+        )}
+        {(showRiotTooltip || copiedRiot) && (
+          <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap">
+            {copiedRiot ? "Copied!" : RIOT_USERNAME}
+          </span>
+        )}
+      </button>
+
+      <Link
+        to="/messages"
+        aria-label="Guestbook"
+        className="social-icon"
+      >
+        <MessageSquare className="w-6 h-6" />
+      </Link>
     </div>
   );
 };

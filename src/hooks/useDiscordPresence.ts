@@ -60,9 +60,32 @@ interface FallbackConfig {
   avatarUrl?: string;
 }
 
+const CACHE_KEY_PREFIX = "discord_presence_";
+
+const getCachedData = (userId: string): LanyardData | null => {
+  try {
+    const cached = sessionStorage.getItem(`${CACHE_KEY_PREFIX}${userId}`);
+    if (cached) {
+      return JSON.parse(cached);
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return null;
+};
+
+const setCachedData = (userId: string, data: LanyardData) => {
+  try {
+    sessionStorage.setItem(`${CACHE_KEY_PREFIX}${userId}`, JSON.stringify(data));
+  } catch {
+    // Ignore storage errors
+  }
+};
+
 export const useDiscordPresence = (userId: string, fallback?: FallbackConfig) => {
-  const [data, setData] = useState<LanyardData | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Initialize with cached data to prevent flicker
+  const [data, setData] = useState<LanyardData | null>(() => getCachedData(userId));
+  const [loading, setLoading] = useState(() => !getCachedData(userId));
   const [error, setError] = useState<string | null>(null);
   const [isMonitored, setIsMonitored] = useState(true);
 
@@ -108,6 +131,7 @@ export const useDiscordPresence = (userId: string, fallback?: FallbackConfig) =>
 
       if (result.success) {
         setData(result.data);
+        setCachedData(userId, result.data);
         setIsMonitored(true);
         setError(null);
       } else {
@@ -160,6 +184,7 @@ export const useDiscordPresence = (userId: string, fallback?: FallbackConfig) =>
       if (message.op === 0) {
         if (message.t === "INIT_STATE" || message.t === "PRESENCE_UPDATE") {
           setData(message.d);
+          setCachedData(userId, message.d);
           setIsMonitored(true);
           setError(null);
         }

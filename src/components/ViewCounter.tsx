@@ -4,11 +4,11 @@ import { Eye } from "lucide-react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 const VIEW_ID = "00000000-0000-0000-0000-000000000001";
+const SESSION_KEY = "profile_view_counted";
 
 const ViewCounter = () => {
   const [viewCount, setViewCount] = useState<number | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const hasIncrementedRef = useRef(false);
 
   const fetchViewCount = useCallback(async () => {
     const { data } = await supabase
@@ -50,8 +50,11 @@ const ViewCounter = () => {
 
   useEffect(() => {
     const incrementAndFetch = async () => {
-      // Only increment once per page load
-      if (hasIncrementedRef.current) {
+      // Check sessionStorage - only increment once per browser session
+      const hasAlreadyCounted = sessionStorage.getItem(SESSION_KEY);
+
+      if (hasAlreadyCounted) {
+        // Already counted this session, just fetch current count
         await fetchViewCount();
         return;
       }
@@ -71,7 +74,8 @@ const ViewCounter = () => {
           .eq("id", VIEW_ID);
 
         setViewCount(newCount);
-        hasIncrementedRef.current = true;
+        // Mark as counted for this session
+        sessionStorage.setItem(SESSION_KEY, "true");
       }
     };
 
