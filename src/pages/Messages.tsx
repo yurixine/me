@@ -32,7 +32,7 @@ const Messages = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-foreground">
                 <MessageSquare className="w-5 h-5" />
-                <span className="tracking-wider">Leave me a message!</span>
+                <span className="tracking-wider"><main>Messages</main></span>
               </CardTitle>
             </CardHeader>
             <CardContent>
