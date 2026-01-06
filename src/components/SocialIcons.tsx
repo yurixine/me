@@ -120,7 +120,7 @@ const SocialIcons = () => {
 
       <Link
         to="/messages"
-        aria-label="Guestbook"
+        aria-label="Leave a message."
         className="social-icon"
       >
         <MessageSquare className="w-6 h-6" />
