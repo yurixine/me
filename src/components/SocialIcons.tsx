@@ -1,6 +1,5 @@
-import { Check, MessageSquare } from "lucide-react";
+import { Check } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 const DiscordIcon = () => (
   <svg
@@ -118,13 +117,6 @@ const SocialIcons = () => {
         )}
       </button>
 
-      <Link
-        to="/messages"
-        aria-label="Leave a message."
-        className="social-icon"
-      >
-        <MessageSquare className="w-6 h-6" />
-      </Link>
     </div>
   );
 };
