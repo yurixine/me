@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Eye } from "lucide-react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
-const VIEW_ID = "00000000-0000-0000-0000-000000000001";
 const SESSION_KEY = "profile_view_counted";
 
 const ViewCounter = () => {
@@ -11,14 +10,12 @@ const ViewCounter = () => {
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   const fetchViewCount = useCallback(async () => {
-    const { data } = await supabase
+    const { count } = await supabase
       .from("profile_views")
-      .select("view_count")
-      .eq("id", VIEW_ID)
-      .single();
+      .select("*", { count: "exact", head: true });
 
-    if (data) {
-      setViewCount(data.view_count);
+    if (count !== null) {
+      setViewCount(count);
     }
   }, []);
 
@@ -33,24 +30,23 @@ const ViewCounter = () => {
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: 'INSERT',
           schema: 'public',
           table: 'profile_views',
-          filter: `id=eq.${VIEW_ID}`
         },
-        (payload) => {
-          const newData = payload.new as { view_count: number };
-          setViewCount(newData.view_count);
+        () => {
+          // Refetch count when a new view is inserted
+          fetchViewCount();
         }
       )
       .subscribe();
 
     channelRef.current = channel;
-  }, []);
+  }, [fetchViewCount]);
 
   useEffect(() => {
-    const incrementAndFetch = async () => {
-      // Check sessionStorage - only increment once per browser session
+    const recordViewAndFetch = async () => {
+      // Check sessionStorage - only record once per browser session
       const hasAlreadyCounted = sessionStorage.getItem(SESSION_KEY);
 
       if (hasAlreadyCounted) {
@@ -59,27 +55,17 @@ const ViewCounter = () => {
         return;
       }
 
-      const { data: currentData } = await supabase
-        .from("profile_views")
-        .select("view_count")
-        .eq("id", VIEW_ID)
-        .single();
+      // Insert a new view row
+      await supabase.from("profile_views").insert({});
 
-      if (currentData) {
-        const newCount = currentData.view_count + 1;
+      // Fetch the total count
+      await fetchViewCount();
 
-        await supabase
-          .from("profile_views")
-          .update({ view_count: newCount, updated_at: new Date().toISOString() })
-          .eq("id", VIEW_ID);
-
-        setViewCount(newCount);
-        // Mark as counted for this session
-        sessionStorage.setItem(SESSION_KEY, "true");
-      }
+      // Mark as counted for this session
+      sessionStorage.setItem(SESSION_KEY, "true");
     };
 
-    incrementAndFetch();
+    recordViewAndFetch();
     setupRealtimeChannel();
 
     return () => {

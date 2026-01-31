@@ -12,48 +12,18 @@ export type Database = {
   }
   public: {
     Tables: {
-      messages: {
-        Row: {
-          id: string
-          author: string
-          content: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          author: string
-          content: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          author?: string
-          content?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       profile_views: {
         Row: {
-          created_at: string
           id: string
-          updated_at: string
-          view_count: number
+          viewed_at: string
         }
         Insert: {
-          created_at?: string
           id?: string
-          updated_at?: string
-          view_count?: number
+          viewed_at?: string
         }
         Update: {
-          created_at?: string
           id?: string
-          updated_at?: string
-          view_count?: number
+          viewed_at?: string
         }
         Relationships: []
       }
