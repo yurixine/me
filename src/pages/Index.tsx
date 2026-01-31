@@ -50,12 +50,12 @@ const Index = () => {
               <span className="text-foreground/60 text-xs tracking-[0.15em] uppercase font-light mb-2 whitespace-nowrap transition-all duration-300 group-hover:text-foreground/80">
                 my pirsu
               </span>
-              <div className="relative">
+              <div className="relative w-20 h-20">
                 <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl group-hover:bg-primary/40 transition-all duration-500 animate-pulse-glow" />
                 <img
                   src={otherHalfAvatarUrl}
                   alt="Other Half Avatar"
-                  className="relative w-20 h-20 rounded-full border-2 border-primary/30 object-cover shadow-[0_0_20px_rgba(244,114,182,0.3)] hover:shadow-[0_0_30px_rgba(244,114,182,0.5)] hover:border-primary/50 transition-all duration-300 hover:scale-105"
+                  className="absolute inset-0 w-full h-full rounded-full border-2 border-primary/30 object-cover shadow-[0_0_20px_rgba(244,114,182,0.3)] hover:shadow-[0_0_30px_rgba(244,114,182,0.5)] hover:border-primary/50 transition-all duration-300 hover:scale-105"
                 />
               </div>
             </a>
