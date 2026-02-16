@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
-const KATSEYE_LOGO = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ57opDSYuzTsOez2w6ZE8z85EV2NlXXQf3GQ&s";
-const SONG_TITLE = "Internet Girl - KATSEYE";
-const YOUTUBE_VIDEO_ID = "5q9EjSUovc4";
+const KATSEYE_LOGO = "https://i.ytimg.com/vi/DoM3DiFnXxM/maxresdefault.jpg";
+const SONG_TITLE = "Montaguem Miau";
+const YOUTUBE_VIDEO_ID = "DoM3DiFnXxM";
 
 interface YTPlayer {
   playVideo: () => void;
